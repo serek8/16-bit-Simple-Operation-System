@@ -8,13 +8,16 @@
 	BUFFER_SEGMENT=			0x0
 	BUFFER_OFFSET=			0x1000	# future Kernel begin address
 
+	BUFFER_FAT12_SEGMENT=		0x0
+	BUFFER_FAT12_OFFSET=		0x9000	
+
 
 /* predefined macros: stack segment                       */
 	
 
 
-	BOOT_LOADER_ROOT_OFFSET=	0x0200
-	BOOT_LOADER_FAT_OFFSET=		0x0200
+	#BOOT_LOADER_ROOT_OFFSET=	0x0200
+	#BOOT_LOADER_FAT_OFFSET=		0x0200
 
 
 
@@ -338,7 +341,7 @@ _findFileOut:
 	#Compare $1,	%ax
 
      /* read fat table into memory */
-     readSector $FAT12_FAT_POSITION, $BUFFER_SEGMENT, $BUFFER_OFFSET, $FAT12_FAT_SIZE
+     readSector $FAT12_FAT_POSITION, $BUFFER_SEGMENT, $BUFFER_FAT12_OFFSET, $FAT12_FAT_SIZE
 
 
 	#push 	$BUFFER_OFFSET
@@ -358,10 +361,10 @@ _loadCluster:
      clusterToLinearBlockAddress %ax
      readSector %ax, $BUFFER_SEGMENT, %bx, $BOOT_DISK_SECTORS_PER_CLUSTER
 
-	push 	$BUFFER_OFFSET
-	call PrintX 
-	add $2,	%sp
-	jmp BUFFER_OFFSET
+	#push 	$BUFFER_OFFSET
+	#call PrintX 
+	#add $2,	%sp
+	#jmp   $(BUFFER_SEGMENT), $(BUFFER_OFFSET)
 
      popw  %ax
      xorw %dx, %dx
@@ -371,9 +374,9 @@ _loadCluster:
      divw %bx
 
 
-     movw $BOOT_LOADER_FAT_OFFSET, %bx
+     movw $BUFFER_FAT12_OFFSET, %bx
      addw %ax, %bx
-     movw $BOOT_LOADER_CODE_AREA_ADDRESS_SEG, %ax
+     movw $BUFFER_SEGMENT, %ax
      movw %ax, %es
      movw %es:(%bx), %ax
      orw  %dx, %dx

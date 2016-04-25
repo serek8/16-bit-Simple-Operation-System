@@ -4,7 +4,7 @@ __asm__("jmpl $0x0000, $main\n");
 
 
 #include "utils/iodisp.h"
-/*
+
 typedef char bool;
 #define true 1
 #define false 0
@@ -15,28 +15,28 @@ typedef char bool;
 #define CARRIAGE_RETURN_ASCII 0x0D
 #define NEW_LINE_ASCII 0x0A
 
-*/
+
 /* this function is used to sleep for  */
 /* a given number of seconds           */
-/*void delay(int seconds) {
+void delay(int seconds) {
      __asm__ __volatile__(
           "int $0x15" : : "a"(0x8600), "c"(0x000f * seconds), "d"(0x4240 * seconds)
      );
 }
-*/
+
 /* string functions */
 /* this function isused to calculate   */
 /* length of the string and then return*/
 /* it                                  */
-/*int strlength(const char* pStr) {
+int strlength(const char* pStr) {
      int i = 0;
 
      while(*pStr) {
           ++i;
      }
      return i;
-     }*/
-/*
+     }
+
 bool compare_strings(const char *str_1, const char *str_2)
 {
   unsigned short i = 0;
@@ -49,13 +49,13 @@ bool compare_strings(const char *str_1, const char *str_2)
 
 }
 
-*/
+
 /* * * * * * * * * * * * * * * * * * * * * * * * */
 /* Wykonuje polecenie dla podanego stringu       */
 /* POST:                                         */
 /*      true  - jesli wykonano polecenie         */
 /*      false - jesli polecenie nie istnieje     */
-/*
+
 bool execute_shell_task(const char *task_str)
 {
   if(compare_strings(task_str, "info"))
@@ -109,7 +109,7 @@ void shell()
   }
 }
 
-*/
+
 
 
 /* this is the main entry for the kernel*/
@@ -118,7 +118,7 @@ void main() {
      print_string("\nWcisnij dowolny klawisz aby kontynuowac !");
      getch();
 	print_string("\nUruchomiony z FAT12");
-     //shell(); 
+     shell(); 
 
      while(1);
 }

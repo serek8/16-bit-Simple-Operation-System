@@ -9,6 +9,7 @@
 
 /* this function is used to clear the */
 /* screen buffer by splitting spaces  */
+/*
 void clearScreen() {
      __asm__ __volatile__ (
           "int $0x10" : : "a"(0x0200), "b"(0x0000), "d"(0x0000)
@@ -36,7 +37,7 @@ void showCursor(short choice) {
           );
      }
 }
-
+*/
 
 
 void getch() {
