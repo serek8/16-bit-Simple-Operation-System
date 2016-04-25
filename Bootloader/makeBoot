@@ -1,0 +1,5 @@
+#!/bin/bash 
+rm floppy.img
+as boot.s -o boot.o
+ld -Ttext 0x7c00 --oformat=binary boot.o -o boot.bin
+dd if=boot.bin of=floppy.img

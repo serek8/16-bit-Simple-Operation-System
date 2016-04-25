@@ -1,0 +1,16 @@
+rm floppy.img
+cd Bootloader
+./makeBoot
+cd ..
+dd if=./Bootloader/floppy.img of=floppy.img seek=0 bs=1 count=512 conv=notrunc
+dd if=/dev/zero of=./floppy.img skip=1 seek=1 bs=512 count=2879
+sudo chmod a+rw floppy.img
+sleep 0.1
+sudo mount -o loop floppy.img ./MountPath/ -o fat=12
+sleep 0.5
+sudo cp ./Kernel/KERNEL.BIN ./MountPath
+sleep 0.5
+sudo umount ./MountPath
+
+
+
