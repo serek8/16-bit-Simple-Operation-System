@@ -2,7 +2,7 @@ __asm__(".code16gcc\n");
 __asm__("jmp $0x0000, $main\n");
 
 extern void _PrintString(const char *str, const char *str2);
-extern void _LoadFileWithName();
+extern char* _LoadFileWithName(char *filename);
 
 #include "utils/iodisp.h"
 
@@ -73,6 +73,10 @@ bool execute_shell_task(const char *task_str)
     {
      // _PrintString();
     }
+  else if(compare_strings(task_str, "read"))
+    { 
+	print_string(_LoadFileWithName("SAMPLE  TXT"));
+    } 
   else return false;
   return true;
 }
@@ -124,13 +128,13 @@ void main() {
      //setCursor(0,4);
 	
 	
-	_PrintString("xyz", "abc");
+	//_PrintString("xyz", "abc");
 
      print_string("\nWcisnij dowolny klawisz aby kontynuowac !");
      getch();
-//_LoadFileWithName();
+	
 	print_string("\nUruchomiony z FAT12");
-     shell(); 
+     //shell(); 
 
      while(1);
 }

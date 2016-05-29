@@ -37,7 +37,7 @@
 	msgDone: .asciz "Done..." #message about erroneous operation
 	msgTrue:	.asciz "true"
 	msgFalse:	.asciz "false"
-fileStage2: .ascii  "KERNEL  BIN"
+fileStage2: .ascii  "SAMPLE  TXT"
  
      #function to print null terminated string
      _PrintString:
@@ -69,85 +69,6 @@ fileStage2: .ascii  "KERNEL  BIN"
 	pop %bp
 	ret
 
-
-
-
-
-    
-
-
-	
-
-      #macro to print null terminated string
-      #this macro calls function PrintString
-    /* .macro PrintString str
-          leaw \str, %si
-          call _PrintString
-     .endm*/
-     #function to print null terminated string
-     /*_PrintString:
-          lodsb
-          orb  %al  , %al
-          jz   _PrintStringOut
-          movb $0x0e, %ah
-          int  $0x10
-          jmp  _PrintString
-     _PrintStringOut:
-     ret
-*//*
-     PrintX:
-	push %bp
-	mov %sp,	%bp
-
-
-	mov $0,		%si
-	mov 6(%bp),	%bx	# +2
-	movb $0x0e, %ah
-	PrintX_start:
-	
-	movb (%bx, %si),	%al
-	inc %si
-        int  $0x10
-	cmp $1000, %si
-	jne PrintX_start
-
-	mov %bp,	%sp
-	pop %bp
-     ret
-
-.macro Compare arg1 arg2
-	pushf
-	cmp \arg1,	\arg2
-	je  Compare_true
-	PrintString msgFalse
-	jmp Compare_end
-Compare_true:
-	PrintString msgTrue
-Compare_end:	
-	popf
-.endm
-*/
-
-
-    
-	/* this macro is used to read a sector into  */
-	/* the target memory                         */
-	/* It calls the _readSector function with    */
-	/* the following parameters                  */
-	/* parameter(s): sector Number               */
-	/*            address to load                */
-	/*            offset of the address          */
-	/*            Number of sectors to read      */
-	/*.macro readSector sectorno, address, offset, totalsectors
-	pushw \sectorno
-	pushw \address
-	pushw \offset
-	pushw \totalsectors
-	call  _readSector
-	addw  $0x0008, %sp
-	.endm
-
-*/
 
 
 
@@ -236,11 +157,11 @@ _readSector:
 	/*					        */
 	/* return:	%ax = sector where file starts */
 _findFile:
-	/* read fat table into memory */
+	
 	push %bp
 	mov  %sp   , %bp
 
-	
+	/* read fat table into memory */
 	pushw $FAT12_ROOT_POSITION
 	pushw $BUFFER_SEGMENT
 	pushw $BUFFER_OFFSET
@@ -265,7 +186,7 @@ _findFile:
 
 _findFileIn:
 	movw  $0x0002  , %cx
-	movw  $fileStage   , %si	# +2
+	movw  $fileStage2   , %si	# +2
 	movw  %bx    , %di
 
 	repz  cmpsb
@@ -302,7 +223,7 @@ _findFileOut:
      pushw %ax
 	
 	pushw $FAT12_FAT_POSITION
-	pushw  $BUFFER_SEGMENT
+	pushw $BUFFER_FAT12_SEGMENT
 	pushw $BUFFER_FAT12_OFFSET
 	pushw $FAT12_FAT_SIZE
      /* read fat table into memory */
@@ -342,7 +263,7 @@ _loadCluster:
 
      movw $BUFFER_FAT12_OFFSET, %bx
      addw %ax, %bx
-     movw $BUFFER_SEGMENT, %ax
+     movw $BUFFER_FAT12_SEGMENT, %ax
      movw %ax, %es
      movw %es:(%bx), %ax
      orw  %dx, %dx
@@ -410,14 +331,28 @@ ret
  _LoadFileWithName:
 	push %bp
 	mov %sp, %bp
-	#mov 6(%bp),	%si
+	mov 6(%bp),	%bx
+	mov $fileStage2,	%dx
+	mov $0,	%si
+	_LoadFileWithNameCopyNextLetter:
+	
+	movb (%bx, %si), %cl
+	movb %cl, fileStage2(%si)
+	cmp $11,	%ax
+	inc %ax
+	jne LoadFileWithNameCopyNextLetter
+	
+
+
 	#_PrintStringNext:
 	#movw $0xc000, (BUFFER_OFFSET)
 	#movw $0x0,    (BUFFER_SEGMENT)
 	call _loadFile 
 	 #PrintString msgDone
+	mov $BUFFER_OFFSET, %ax
 	movw  %bp    , %sp
 	pop %bp
+	
      ret
 
 
