@@ -1,9 +1,12 @@
 #!/bin/bash 
 rm floppy.img
-rm test.o
-rm test.bin
-rm test.elf
-gcc -std=c99 -c -g -march=i686 -m32 -ffreestanding -Wall -Werror test.c -o test.o
-ld -static -Ttest.ld -m elf_i386 -nostdlib --nmagic -o test.elf test.o
+gcc -std=c99 -c -g -march=i386 -m16 -ffreestanding -Wall -Werror test.c -o test.o
+as fat12LibX.s -o fat12Lib.o --32 -g
+#gcc -std=c99 -c -g -march=i386 -m16 -ffreestanding -Wall -Werror fat12Lib.s -o fat12Lib.o
+ld -static -Ttest.ld -m elf_i386 -nostdlib --nmagic -o test.elf test.o fat12Lib.o
 objcopy -O binary test.elf test.bin
 dd if=test.bin of=floppy.img
+cp floppy.img KERNEL.BIN
+rm *.o
+#rm *.bin
+#rm *.elf

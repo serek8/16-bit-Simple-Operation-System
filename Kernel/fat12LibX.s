@@ -11,7 +11,7 @@
 	BUFFER_FAT12_SEGMENT=		0x0
 	BUFFER_FAT12_OFFSET=		0x9000	
 
-
+.global _LoadFileWithName
 /* predefined macros: stack segment                       */
 	
 
@@ -407,37 +407,22 @@ ret
      movw  $(BUFFER_OFFSET) , %bx
      movw  %ax, %es
      movw  %ax, %ds
-	/* sdsdsd8*/
-
-	movb $0x0e, %ah
-	movb $'A', %al
-	int  $0x10
-
-	
-	movw $0x0000, %dx
-	movw %cs, %cx
-	cmpw %cx, %dx
-	je xx
-
-
-
-	movb $0x0e, %ah
-	movb $'D', %al
-	int  $0x10
-
-	xx:
-
-	movb $0x0e, %ah
-	movb $'C', %al
-	int  $0x10
-	/*sdsdfdsfdsf*/
-     jmp   $(BUFFER_SEGMENT), $(BUFFER_OFFSET)
+PrintString msgHello
+PrintString msgHello
+PrintString msgHello
+jmp _freeze    
+ jmp   $(BUFFER_SEGMENT), $(BUFFER_OFFSET)
 .endm
+ _LoadFileWithName:
+	push %bp
+	mov %sp, %bp
 
+	call _boot 
+	 #PrintString msgDone
+	movw  %bp    , %sp
+	pop %bp
+     ret
 _boot:
-
-	
-	PrintString msgHello
 	PrintString msgHello
 	loadFile fileStage2
 

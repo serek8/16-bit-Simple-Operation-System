@@ -249,14 +249,8 @@ _readSector:
 	
 	readSector $FAT12_ROOT_POSITION, $BUFFER_SEGMENT, $BUFFER_OFFSET, $FAT12_ROOT_SIZE
 	
-	#push 	$BUFFER_OFFSET
-	#call PrintX 
-	#add $2,	%sp
-
-	#PrintString msgHello
-
 	push $fileStage2
-	#pushw \file
+	
 	call  _findFile
 	addw  $0x0002, %sp
 .endm
@@ -268,7 +262,7 @@ _readSector:
 	/*               target offset                  */
 	/*               root directory size            */
 	/*					        */
-	/* return:	%eax = sector where file starts */
+	/* return:	%ax = sector where file starts */
 _findFile:
 	
 	pushw %bp
@@ -283,27 +277,13 @@ _findFile:
 
 	
 
-	#jmp   _findFileIn
 	jmp   _findFileInitValues
 
 _findFileIn:
 	movw  $0x0002  , %cx
 	movw  4(%bp)   , %si
-	#mov $msgHello,	%si
 	movw  %bx    , %di
 
-	#mov (%bx),	%al
-	
-	#Compare (),	%al
-	#inc %si
-	#push %si
-	#PrintString BUFFER_OFFSET
-	
-	#pop %si
-	#push 	%si
-	#call PrintX 
-	#add $2,	%sp
-	#PrintString msgHello
 	repz  cmpsb
 	je    _findFileOut
 _findFileDecrementCount:
@@ -329,29 +309,21 @@ _findFileOut:
 /* address 0x1000:0x0000                     */
 /* parameter(s): target file name            */
 .macro loadFile file
-     /* check for file existence */
+
+     /* find sector where the file starts and pass it to %ax */
      findFile \file
-	#PrintString msgHello
+
+     /* backup %ax */
      pushw %ax
 	
-	#add $'0',	%ax
-	#mov %ax, %al
-	#  movb $0x0e, %ah
-        #  int  $0x10
-	#Compare $1,	%ax
 
      /* read fat table into memory */
      readSector $FAT12_FAT_POSITION, $BUFFER_SEGMENT, $BUFFER_FAT12_OFFSET, $FAT12_FAT_SIZE
 
-
-	#push 	$BUFFER_OFFSET
-	#call PrintX 
-	#add $2,	%sp
-
-	
-
-	
+     /* restore */	
      popw  %ax
+
+
      movw  $BUFFER_OFFSET, %bx
 _loadCluster:
      pushw %bx
@@ -361,10 +333,7 @@ _loadCluster:
      clusterToLinearBlockAddress %ax
      readSector %ax, $BUFFER_SEGMENT, %bx, $BOOT_DISK_SECTORS_PER_CLUSTER
 
-	#push 	$BUFFER_OFFSET
-	#call PrintX 
-	#add $2,	%sp
-	#jmp   $(BUFFER_SEGMENT), $(BUFFER_OFFSET)
+
 
      popw  %ax
      xorw %dx, %dx
