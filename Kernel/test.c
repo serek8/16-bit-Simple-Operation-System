@@ -200,6 +200,9 @@ else if (compare_strings(task_str, "help"))
       print_string("logo - logo PWR");
       putchar(NEW_LINE_ASCII);
       putchar(CARRIAGE_RETURN_ASCII);
+      print_string("windows - logo Windows");
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
       print_string("color - kolorowe okienka");
       putchar(NEW_LINE_ASCII);
       putchar(CARRIAGE_RETURN_ASCII);
@@ -207,6 +210,9 @@ else if (compare_strings(task_str, "help"))
       putchar(NEW_LINE_ASCII);
       putchar(CARRIAGE_RETURN_ASCII);
       print_string("ls - lista dostepnych programow");
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
+      print_string("cat NAZWAPLIKU - odpalenie danego pliku");
       putchar(NEW_LINE_ASCII);
       putchar(NEW_LINE_ASCII);
       putchar(CARRIAGE_RETURN_ASCII);
@@ -221,13 +227,13 @@ else if (compare_strings(task_str, "help"))
     }
   else if(compare_strings_with_space(task_str, "cat"))
     { 
-	command_cat(task_str);
+	   command_cat(task_str);
     } 
   else if(compare_strings(task_str, "ls"))
     { 
-	char result[13*10];
-	list_fat12_all(result);
-	print_string(result);
+	   char result[13*10];
+	   list_fat12_all(result);
+	   print_string(result);
     } 
   else return false;
   return true;
