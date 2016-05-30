@@ -3,6 +3,9 @@ __asm__("jmp $0x0000, $main\n");
 
 extern void _PrintString(const char *str, const char *str2);
 extern char* _LoadFileWithName(char *filename);
+extern char* _ListFiles();
+extern void list_fat12_all(char*);
+
 
 #include "utils/iodisp.h"
 
@@ -77,8 +80,29 @@ bool execute_shell_task(const char *task_str)
     { 
 	print_string(_LoadFileWithName("SAMPLE  TXT"));
     } 
+  else if(compare_strings(task_str, "ls"))
+    { 
+	char result[12*4];
+	list_fat12_all(result);
+	print_string(result);
+    } 
   else return false;
   return true;
+}
+
+
+void list_fat12_all(char *result)
+{
+	
+	char *all_table = _ListFiles();
+	for(int i=0; i<4; i++)
+	{
+		for(int j=0; j<11; j++)
+		{
+			result[i*12+j] = all_table[i*12+j];
+		}
+		result[)i+1)*12] = '\n';
+	}
 }
 
 void shell() 
@@ -125,16 +149,12 @@ void shell()
 
 /* this is the main entry for the kernel*/
 void main() {
-     //setCursor(0,4);
-	
-	
-	//_PrintString("xyz", "abc");
+
 
      print_string("\nWcisnij dowolny klawisz aby kontynuowac !");
      getch();
 	
-	print_string("\nUruchomiony z FAT12");
-     //shell(); 
+     shell(); 
 
      while(1);
 }

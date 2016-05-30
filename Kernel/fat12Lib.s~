@@ -340,7 +340,7 @@ ret
 	movb %cl, fileStage2(%si)
 	cmp $11,	%ax
 	inc %ax
-	jne LoadFileWithNameCopyNextLetter
+	jne _LoadFileWithNameCopyNextLetter
 	
 
 
@@ -361,6 +361,44 @@ _freeze:                      #infinite loop
 _failure:                     #
      #PrintString msgFail     #write error message and then
      jmp _freeze              #jump to the freezing point
+
+
+
+
+
+_listFiles:
+	
+	push %bp
+	mov  %sp   , %bp
+	
+	/* read fat table into memory */
+	pushw $FAT12_ROOT_POSITION
+	pushw $BUFFER_SEGMENT
+	pushw $BUFFER_OFFSET
+	pushw $FAT12_ROOT_SIZE
+	call  _readSector
+	addw  $0x0008, %sp
+		
+	
+	mov $BUFFER_OFFSET, %ax
+	
+	mov %bp, %sp
+	pop %bp
+	ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

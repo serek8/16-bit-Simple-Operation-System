@@ -1,6 +1,8 @@
 .code16gcc
 .global _PrintString
 .global _LoadFileWithName
+.global _ListFiles
+
 
 	BUFFER_SEGMENT=			0x0
 	BUFFER_OFFSET=			0xc000	# future Kernel begin address
@@ -361,6 +363,44 @@ _freeze:                      #infinite loop
 _failure:                     #
      #PrintString msgFail     #write error message and then
      jmp _freeze              #jump to the freezing point
+
+
+
+
+
+_ListFiles:
+	
+	push %bp
+	mov  %sp   , %bp
+	
+	/* read fat table into memory */
+	pushw $FAT12_ROOT_POSITION
+	pushw $BUFFER_SEGMENT
+	pushw $BUFFER_OFFSET
+	pushw $FAT12_ROOT_SIZE
+	call  _readSector
+	addw  $0x0008, %sp
+		
+	
+	mov $BUFFER_OFFSET, %ax
+	
+	mov %bp, %sp
+	pop %bp
+	ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
