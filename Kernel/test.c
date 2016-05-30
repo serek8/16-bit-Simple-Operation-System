@@ -85,7 +85,7 @@ void print_windows_logo()
 {
   char* logo = _LoadFileWithName("WINDOW  TXT");
 
-  for (int i = 0; i < 10; ++i)
+  for (int i = 0; i < 100; ++i)
   {
     for (int j = 0; j < 100; ++j)
     {
