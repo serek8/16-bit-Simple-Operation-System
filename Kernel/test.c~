@@ -56,6 +56,66 @@ bool compare_strings(const char *str_1, const char *str_2)
 }
 
 
+void print_pwr_logo()
+{
+  char* logo = _LoadFileWithName("PWRPWR  TXT");
+
+  print_string("Politechnika Wroclawska");
+
+  for (int i = 55; i < 116; ++i)
+  {
+    for (int j = 15; j < 76; ++j)
+    {
+      if (*logo == '0')
+      {
+        drawPixel(4, i, j);
+      }
+      else
+      {
+        drawPixel(14, i, j);
+      }
+      logo++;
+    }
+  }
+  getch();
+}
+
+
+void print_windows_logo()
+{
+  char* logo = _LoadFileWithName("WINDOW  TXT");
+
+  for (int i = 0; i < 10; ++i)
+  {
+    for (int j = 0; j < 100; ++j)
+    {
+      if (*logo == '0')
+      {
+        drawPixel(0, i, j);
+      }
+      else if (*logo == '1')
+      {
+        drawPixel(12, i, j);
+      }
+      else if (*logo == '2')
+      {
+        drawPixel(10, i, j);
+      }
+      else if (*logo == '3')
+      {
+        drawPixel(11, i, j);
+      }
+      else if (*logo == '4')
+      {
+        drawPixel(14, i, j);
+      }
+      logo++;
+    }
+  }
+  getch();
+}
+
+
 /* * * * * * * * * * * * * * * * * * * * * * * * */
 /* Wykonuje polecenie dla podanego stringu       */
 /* POST:                                         */
@@ -66,11 +126,72 @@ bool execute_shell_task(const char *task_str)
 {
   if(compare_strings(task_str, "info"))
     {
-      print_string("System operacyjny JP");
+        print_string("System operacyjny PWR 16");
     }
   else if(compare_strings(task_str, "color"))
     {
-      print_string("Wlaczam kolorowe okienka");
+        print_string("Wlaczam kolorowe okienka");
+        delay(3);
+        __asm__ __volatile__ (
+          "int $0x10" : : "a"(0x0013)
+      );
+    }
+  else if(compare_strings(task_str, "nocolor"))
+    {
+        print_string("Wylaczam kolorowe okienka");
+        delay(3);
+        __asm__ __volatile__ (
+          "int $0x10" : : "a"(0x0003)
+      );
+    }
+  else if(compare_strings(task_str, "logo"))
+    {
+      clearScreen();
+      __asm__ __volatile__ (
+          "int $0x10" : : "a"(0x0013)
+      );
+      print_pwr_logo();
+      __asm__ __volatile__ (
+          "int $0x10" : : "a"(0x0003)
+      );
+    }
+  else if(compare_strings(task_str, "windows"))
+    {
+      clearScreen();
+      __asm__ __volatile__ (
+          "int $0x10" : : "a"(0x0013)
+      );
+      print_windows_logo();
+      __asm__ __volatile__ (
+          "int $0x10" : : "a"(0x0003)
+      );
+    }
+else if (compare_strings(task_str, "help"))
+    {
+      print_string("Lista dostepnych komend:");
+      putchar(NEW_LINE_ASCfII);
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
+      print_string("info - informacje o systemie");
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
+      print_string("logo - logo PWR");
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
+      print_string("color - kolorowe okienka");
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
+      print_string("nocolor - wylaczenie kolorowych okienek");
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
+      print_string("ls - lista dostepnych programow");
+      putchar(NEW_LINE_ASCII);
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
+      print_string("help - lista dostepnych komend");
+      putchar(NEW_LINE_ASCII);
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
     }
   else if(compare_strings(task_str, "abi"))
     {
@@ -101,7 +222,7 @@ void list_fat12_all(char *result)
 		{
 			result[i*12+j] = all_table[i*12+j];
 		}
-		result[)i+1)*12] = '\n';
+		result[(i+1)*12] = '\n';
 	}
 }
 
