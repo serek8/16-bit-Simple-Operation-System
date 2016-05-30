@@ -80,3 +80,16 @@ void print_string(const char* pStr) {
           ++pStr;
      }
 }
+
+/* function to print a colored pixel onto the screen                    */
+/* at a given column and at a given row                                 */
+/* input ah = 0x0c                                                      */
+/* input al = desired color                                             */
+/* input cx = desired column                                            */
+/* input dx = desired row                                               */
+/* interrupt: 0x10                                                      */
+void drawPixel(unsigned char color, int col, int row) {
+     __asm__ __volatile__ (
+          "int $0x10" : : "a"(0x0c00 | color), "c"(col), "d"(row)
+     );
+}
