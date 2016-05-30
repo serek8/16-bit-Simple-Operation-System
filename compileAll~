@@ -9,6 +9,10 @@ sleep 0.1
 sudo mount -o loop floppy.img ./MountPath/ -o fat=12
 sleep 0.5
 sudo cp ./Kernel/KERNEL.BIN ./MountPath
+sudo cp ./SampleTxts/Sample.txt ./MountPath
+sudo cp ./SampleTxts/Pwrpwr.txt ./MountPath
+sudo cp ./SampleTxts/Window.txt ./MountPath
+sudo cp ./Applications/*.bin ./MountPath
 sleep 0.5
 sudo umount ./MountPath
 

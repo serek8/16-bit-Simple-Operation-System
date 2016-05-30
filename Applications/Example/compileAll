@@ -1,0 +1,6 @@
+#!/bin/bash 
+gcc -std=c99 -c -g -march=i386 -m16 -ffreestanding -Wall -Werror test.c -o test.o
+ld -static -T ../CompileOptions/test.ld -m elf_i386 -nostdlib --nmagic -o test.elf test.o
+objcopy -O binary test.elf test.bin
+dd if=test.bin of=Ex.bin
+cp Ex.bin ../Ex.bin

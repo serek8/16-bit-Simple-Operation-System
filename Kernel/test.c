@@ -103,6 +103,18 @@ void command_cat(char *task_str)
 	print_string(_LoadFileWithName(filename_buf));
 }
 
+void command_open(char *task_str)
+{
+	char option_buf[20];
+	char filename_buf[20];
+	get_option(task_str, option_buf);
+	name_to_fat_12_format(option_buf, filename_buf);
+	void (*funn)();
+	funn = (void(*))_LoadFileWithName(filename_buf);
+	//void *fun = (void*)_LoadFileWithName(filename_buf);
+	funn();
+}
+
 void print_windows_logo()
 {
   char* logo = _LoadFileWithName("WINDOW  TXT");
@@ -228,6 +240,10 @@ else if (compare_strings(task_str, "help"))
   else if(compare_strings_with_space(task_str, "cat"))
     { 
 	   command_cat(task_str);
+    } 
+  else if(compare_strings_with_space(task_str, "open"))
+    { 
+	command_open(task_str);
     } 
   else if(compare_strings(task_str, "ls"))
     { 
