@@ -8,6 +8,8 @@ extern void list_fat12_all(char*);
 
 
 #include "utils/iodisp.h"
+#include "utils/filenameConverter.h"
+
 
 typedef char bool;
 #define true 1
@@ -48,11 +50,23 @@ bool compare_strings(const char *str_1, const char *str_2)
   unsigned short i = 0;
   while(1)
     {
-      if(str_1[i] == NULL && str_2[i]== NULL ) return TRUE;
+      if(str_1[i] == NULL && str_2[i]== NULL)
+		 return TRUE;
       else if (str_1[i] != str_2[i]) return FALSE;
       ++i;
     }
-
+}
+bool compare_strings_with_space(const char *str_option, const char *str_2)
+{
+    unsigned short i = 0;
+    while(1)
+    {
+        if((str_option[i] == NULL && str_2[i]== NULL) ||
+           (str_option[i] == ' ' ))
+            return TRUE;
+        else if (str_option[i] != str_2[i]) return FALSE;
+        ++i;
+    }
 }
 
 
@@ -80,6 +94,14 @@ void print_pwr_logo()
   getch();
 }
 
+void command_cat(char *task_str)
+{
+	char option_buf[20];
+	char filename_buf[20];
+	get_option(task_str, option_buf);
+	name_to_fat_12_format(option_buf, filename_buf);
+	print_string(_LoadFileWithName(filename_buf));
+}
 
 void print_windows_logo()
 {
@@ -122,7 +144,7 @@ void print_windows_logo()
 /*      true  - jesli wykonano polecenie         */
 /*      false - jesli polecenie nie istnieje     */
 
-bool execute_shell_task(const char *task_str)
+bool execute_shell_task(char *task_str)
 {
   if(compare_strings(task_str, "info"))
     {
@@ -169,7 +191,7 @@ bool execute_shell_task(const char *task_str)
 else if (compare_strings(task_str, "help"))
     {
       print_string("Lista dostepnych komend:");
-      putchar(NEW_LINE_ASCfII);
+      putchar(NEW_LINE_ASCII);
       putchar(NEW_LINE_ASCII);
       putchar(CARRIAGE_RETURN_ASCII);
       print_string("info - informacje o systemie");
@@ -197,13 +219,13 @@ else if (compare_strings(task_str, "help"))
     {
      // _PrintString();
     }
-  else if(compare_strings(task_str, "read"))
+  else if(compare_strings_with_space(task_str, "cat"))
     { 
-	print_string(_LoadFileWithName("SAMPLE  TXT"));
+	command_cat(task_str);
     } 
   else if(compare_strings(task_str, "ls"))
     { 
-	char result[12*4];
+	char result[13*10];
 	list_fat12_all(result);
 	print_string(result);
     } 
@@ -216,13 +238,15 @@ void list_fat12_all(char *result)
 {
 	
 	char *all_table = _ListFiles();
-	for(int i=0; i<4; i++)
+	for(int i=0; i<10; i++)
 	{
 		for(int j=0; j<11; j++)
 		{
-			result[i*12+j] = all_table[i*12+j];
+		
+			result[(i*13)+j] = all_table[i*64+j];
 		}
-		result[(i+1)*12] = '\n';
+		result[(i+1)*13-2] = '\n';
+		result[(i+1)*13-1] = '\n';
 	}
 }
 
@@ -268,6 +292,7 @@ void shell()
 
 
 
+
 /* this is the main entry for the kernel*/
 void main() {
 
@@ -279,6 +304,8 @@ void main() {
 
      while(1);
 }
+
+
 
 
 
