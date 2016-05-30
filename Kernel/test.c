@@ -55,7 +55,7 @@ bool compare_strings(const char *str_1, const char *str_2)
 
 void print_pwr_logo()
 {
-  char* logo = _LoadFileWithName(PWRPWR  TXT);
+  char* logo = _LoadFileWithName("PWRPWR  TXT");
 
   print_string("Politechnika Wroclawska");
 
@@ -80,7 +80,7 @@ void print_pwr_logo()
 
 void print_windows_logo()
 {
-  char* logo = _LoadFileWithName(WINDOW  TXT);
+  char* logo = _LoadFileWithName("WINDOW  TXT");
 
   for (int i = 0; i < 10; ++i)
   {
