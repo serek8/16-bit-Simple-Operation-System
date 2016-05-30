@@ -407,6 +407,8 @@ ret
      movw  $(BUFFER_OFFSET) , %bx
      movw  %ax, %es
      movw  %ax, %ds
+     movw $0xdf00, %ax
+     movw %ax, %sp
      jmp   $(BUFFER_SEGMENT), $(BUFFER_OFFSET)
 .endm
 

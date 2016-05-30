@@ -5,7 +5,7 @@
 
 
 	BUFFER_SEGMENT=			0x0
-	BUFFER_OFFSET=			0xc000	# future Kernel begin address
+	BUFFER_OFFSET=			0x5000	# future Kernel begin address
 /* predefined macros: floppy disk layout                  */
 	BOOT_DISK_SECTORS_PER_TRACK=	0x0012
 	BOOT_DISK_HEADS_PER_CYLINDER=	0x0002
@@ -22,7 +22,7 @@
 	FAT12_END_OF_FILE=		0x0ff8
 
 	BUFFER_FAT12_SEGMENT=		0x0
-	BUFFER_FAT12_OFFSET=		0x9000	
+	BUFFER_FAT12_OFFSET=		0xe000	
 
 /* * * * * * * * * * * * * * * * * * * * * * */
 	
@@ -340,8 +340,9 @@ ret
 	
 	movb (%bx, %si), %cl
 	movb %cl, fileStage2(%si)
-	cmp $11,	%ax
-	inc %ax
+	
+	inc %si
+	cmp $12,	%si
 	jne _LoadFileWithNameCopyNextLetter
 	
 
