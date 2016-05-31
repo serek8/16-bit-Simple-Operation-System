@@ -224,7 +224,10 @@ else if (compare_strings(task_str, "help"))
       print_string("ls - lista dostepnych programow");
       putchar(NEW_LINE_ASCII);
       putchar(CARRIAGE_RETURN_ASCII);
-      print_string("cat NAZWAPLIKU - odpalenie danego pliku");
+      print_string("cat NAZWAPLIKU - odpalenie danego pliku tekstowego");
+      putchar(NEW_LINE_ASCII);
+      putchar(CARRIAGE_RETURN_ASCII);
+      print_string("open NAZWAPLIKU - odpalenie danego programu");
       putchar(NEW_LINE_ASCII);
       putchar(NEW_LINE_ASCII);
       putchar(CARRIAGE_RETURN_ASCII);
